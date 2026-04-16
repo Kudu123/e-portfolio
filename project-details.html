@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Edwin Thomas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="portfolio.css">
+    <script src="https://kit.fontawesome.com/c056c12f2e.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <i class="fa-solid fa-bars open-icon" onclick="openmenu()"></i>
+
+    <nav class="sidebar-container" id="sidemenu">
+        <div class="sidebar-content">
+            <div class="logo">
+                <h1>PROJECT<span>.</span></h1>
+            </div>
+            
+            <i class="fa-solid fa-xmark close-icon" onclick="closemenu()"></i>
+
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fa-solid fa-arrow-left"></i><span>Back Home</span></a></li>
+                <li><a href="index.html#projects"><i class="fa-solid fa-briefcase"></i><span>All Projects</span></a></li>
+                <li><a href="index.html#contact"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#"><i class="fa-brands fa-github"></i></a>
+            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container project-details-container">
+            <div class="row">
+                <div class="col-lg-6 project-visuals">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800" alt="Project Banner" class="featured-img">
+                    <div class="mini-gallery">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=200" alt="Tech detail 1">
+                        <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=200" alt="Tech detail 2">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 project-info">
+                    <h1 class="sub-title">Restaurant Booking System</h1>
+                    <p class="project-tagline">Bridging software and hardware for seamless dining management.</p>
+                    
+                    <div class="info-box">
+                        <h3><i class="fa-solid fa-microchip"></i> Hardware & Software Integration</h3>
+                        <p>Leveraging my background in hardware troubleshooting, this system ensures database reliability and high-speed backend performance using Python and SQL.</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h3><i class="fa-solid fa-code"></i> Stack</h3>
+                        <div class="tech-tags">
+                            <span>Python</span>
+                            <span>Django</span>
+                            <span>MySQL</span>
+                            <span>C++ (Backend Optimization)</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h3><i class="fa-solid fa-list-check"></i> Highlights</h3>
+                        <ul class="details-list">
+                            <li>Optimized SQL queries for fast data retrieval.</li>
+                            <li>Hardware-aware error handling for system stability.</li>
+                            <li>Mobile-responsive frontend via Bootstrap.</li>
+                        </ul>
+                    </div>
+
+                    <div class="details-actions">
+                        <a href="#" class="btn">View Source Code</a>
+                        <a href="#" class="btn btn-outline">Live Demo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var sidemenu = document.getElementById("sidemenu");
+        function openmenu() { sidemenu.style.right = "0"; }
+        function closemenu() { sidemenu.style.right = "-250px"; }
+    </script>
+</body>
+</html>
