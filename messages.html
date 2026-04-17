@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inquiries | Admin Access</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="portfolio.css">
+    <script src="https://kit.fontawesome.com/c056c12f2e.js" crossorigin="anonymous"></script>
+</head>
+<body class="admin-body">
+
+    <div id="pin-overlay" class="pin-overlay">
+        <div class="pin-box">
+            <i class="fa-solid fa-lock" style="font-size: 40px; color: green; margin-bottom: 20px;"></i>
+            <h3>Enter Admin PIN</h3>
+            <input type="password" id="admin-pin" placeholder="****" maxlength="4">
+            <button onclick="checkPin()" class="btn">Access Data</button>
+            <p id="pin-error" style="color: red; margin-top: 10px; display: none;">Invalid PIN. Access Denied.</p>
+        </div>
+    </div>
+
+    <nav class="sidebar-container" id="sidemenu">
+        <div class="sidebar-content">
+            <div class="logo"><h1>ADMIN<span>.</span></h1></div>
+            <i class="fa-solid fa-xmark close-icon" onclick="closemenu()"></i>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="javascript:location.reload()"><i class="fa-solid fa-rotate"></i><span>Refresh</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-content" id="protected-content" style="display: none;">
+        <div class="container">
+            <h1 class="sub-title">Contact Inquiries</h1>
+            <div class="table-responsive inquiry-table">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- AUTHENTICATION LOGIC ---
+        const CORRECT_PIN = "1234"; // CHANGE YOUR PIN HERE
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwvu5sUHbKRxfKaBCfcjvgd-W_fLyMBzVz-ywRj5dpJ8tCS8DmjEjlwEguEM5rpcx8R/exec'; 
+
+        function checkPin() {
+            const userPin = document.getElementById("admin-pin").value;
+            const errorMsg = document.getElementById("pin-error");
+
+            if (userPin === CORRECT_PIN) {
+                document.getElementById("pin-overlay").style.display = "none";
+                document.getElementById("protected-content").style.display = "block";
+                fetchInquiries();
+            } else {
+                errorMsg.style.display = "block";
+                document.getElementById("admin-pin").value = "";
+            }
+        }
+
+        // --- FETCH DATA LOGIC ---
+        async function fetchInquiries() {
+            const tableBody = document.getElementById('data-table');
+            tableBody.innerHTML = '<tr><td colspan="3" class="text-center">Fetching from Cloud...</td></tr>';
+
+            try {
+                const response = await fetch(scriptURL);
+                const data = await response.json();
+                
+                tableBody.innerHTML = ''; 
+
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.Name || 'N/A'}</td>
+                        <td>${row.Email || 'N/A'}</td>
+                        <td>${row.Message || 'N/A'}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            } catch (error) {
+                tableBody.innerHTML = '<tr><td colspan="3" class="text-danger text-center">Connection Error.</td></tr>';
+            }
+        }
+
+        // Sidebar logic
+        var sidemenu = document.getElementById("sidemenu");
+        function openmenu() { sidemenu.style.right = "0"; }
+        function closemenu() { sidemenu.style.right = "-250px"; }
+    </script>
+</body>
+</html>
