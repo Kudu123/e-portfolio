@@ -669,3 +669,201 @@ body { background: #000; color: #c3c3c3; overflow-x: hidden; }
     padding: 12px; color: #fff; text-align: center; font-size: 24px;
     margin: 20px 0; outline: none; letter-spacing: 5px;
 }
+
+
+
+
+
+
+
+
+/* --- NOTES PAGE STYLES --- */
+.note-form-container {
+    background: #111;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #1a1a1a;
+}
+
+.note-form-container input, .note-form-container textarea {
+    width: 100%;
+    background: #000;
+    border: 1px solid #222;
+    color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    outline: none;
+}
+
+.note-form-container input:focus, .note-form-container textarea:focus {
+    border-color: green;
+}
+
+.note-card {
+    background: #111;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid green;
+    height: 100%;
+    transition: 0.3s;
+}
+
+.note-card:hover {
+    transform: translateY(-5px);
+    background: #161616;
+}
+
+.note-card h3 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.note-card p {
+    font-size: 0.9rem;
+    color: #888;
+    line-height: 1.6;
+}
+
+
+
+
+
+/* --- DASHBOARD STAT CARDS --- */
+.stat-card {
+    background: #111;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    border-color: green;
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+}
+
+.stat-info h2 {
+    font-size: 2rem;
+    margin: 0;
+    color: #fff;
+}
+
+.stat-info p {
+    margin: 0;
+    color: #888;
+    font-size: 14px;
+}
+
+/* --- DASHBOARD BOX --- */
+.dashboard-box {
+    background: #111;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #1a1a1a;
+    margin-top: 20px;
+}
+
+.box-title {
+    font-size: 1.2rem;
+    color: green;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.view-all {
+    color: green;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.view-all:hover {
+    color: #fff;
+}
+
+/* Table overrides for dashboard */
+.table-dark {
+    background: transparent;
+}
+
+.table-dark thead th {
+    border-bottom: 1px solid #222;
+    color: #666;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+/* --- SECURITY OVERLAY --- */
+.pin-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; /* Pure black background */
+    z-index: 9999; /* Stays above everything */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pin-box {
+    background: #0a0a0a;
+    padding: 50px 40px;
+    border-radius: 20px;
+    border: 1px solid #1a1a1a;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.pin-box h3 {
+    color: #fff;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.pin-box p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.pin-box input {
+    width: 100%;
+    background: #111;
+    border: 1px solid #222;
+    padding: 15px;
+    color: #fff;
+    text-align: center;
+    font-size: 28px;
+    letter-spacing: 15px; /* Spaces out the dots */
+    border-radius: 8px;
+    margin-bottom: 25px;
+    outline: none;
+}
+
+.pin-box input:focus {
+    border-color: green;
+}
+
+.pin-box .btn {
+    width: 100%;
+    padding: 15px;
+    font-weight: bold;
+}
