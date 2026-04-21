@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Notes | Edwin Thomas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="portfolio.css">
+    <script src="https://kit.fontawesome.com/c056c12f2e.js" crossorigin="anonymous"></script>
+</head>
+<body class="admin-body">
+
+    <i class="fa-solid fa-bars open-icon" onclick="openmenu()"></i>
+
+    <nav class="sidebar-container" id="sidemenu">
+        <div class="sidebar-content">
+            <div class="logo"><h1>ADMIN<span>.</span></h1></div>
+            <i class="fa-solid fa-xmark close-icon" onclick="closemenu()"></i>
+            <ul class="nav-links">
+               <li><a href="admin.html" class="active-sidebar-link"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a></li>
+                <li><a href="note.html"><i class="fa-solid fa-pen-to-square"></i><span>Add Note</span></a></li>
+                <li><a href="viewnotes.html"><i class="fa-solid fa-eye"></i><span>View Notes</span></a></li>
+                <li><a href="messages.html"><i class="fa-solid fa-envelope"></i><span>Inquiries</span></a></li>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i><span>Main Site</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="sub-title">All Saved Notes</h1>
+                <button onclick="fetchNotes()" class="btn btn-sm" style="margin:0; padding: 10px 20px;">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                </button>
+            </div>
+
+            <div id="notes-display" class="row">
+                <p class="text-center w-100">Fetching notes...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzyhjunV__iItl3PyxdHVX9sNfPWZxsW6SuFKjHjkrBg0EnLMRqlSLbhA-tMplrl1Q-/exec';
+        const sidemenu = document.getElementById("sidemenu");
+
+        function openmenu() { sidemenu.style.right = "0"; }
+        function closemenu() { sidemenu.style.right = "-250px"; }
+
+        async function fetchNotes() {
+            const display = document.getElementById('notes-display');
+            display.innerHTML = '<p class="text-center w-100">Loading...</p>';
+            
+            try {
+                const response = await fetch(scriptURL + '?type=notes');
+                const data = await response.json();
+                
+                display.innerHTML = '';
+                if(data.length === 0) {
+                    display.innerHTML = '<p class="text-center w-100">No notes found in Google Sheets.</p>';
+                    return;
+                }
+
+                data.reverse().forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'col-md-6 col-lg-4 mb-4';
+                    card.innerHTML = `
+                        <div class="note-card">
+                            <div class="note-header">
+                                <small>${item.Date ? new Date(item.Date).toLocaleDateString() : 'No Date'}</small>
+                                <i class="fa-solid fa-note-sticky" style="color: green;"></i>
+                            </div>
+                            <h3>${item.Title}</h3>
+                            <p>${item.Note}</p>
+                        </div>
+                    `;
+                    display.appendChild(card);
+                });
+            } catch (error) {
+                display.innerHTML = '<p class="text-danger text-center w-100">Connection Error. Check Script URL.</p>';
+            }
+        }
+
+        window.onload = fetchNotes;
+    </script>
+</body>
+</html>

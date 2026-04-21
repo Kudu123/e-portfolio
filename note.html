@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Notes | Edwin Thomas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="portfolio.css">
+    <script src="https://kit.fontawesome.com/c056c12f2e.js" crossorigin="anonymous"></script>
+</head>
+<body class="admin-body">
+
+    <i class="fa-solid fa-bars open-icon" onclick="openmenu()"></i>
+
+    <nav class="sidebar-container" id="sidemenu">
+        <div class="sidebar-content">
+            <div class="logo"><h1>ADMIN<span>.</span></h1></div>
+            <i class="fa-solid fa-xmark close-icon" onclick="closemenu()"></i>
+            <ul class="nav-links">
+            <li><a href="admin.html" class="active-sidebar-link"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a></li>
+                <li><a href="note.html"><i class="fa-solid fa-pen-to-square"></i><span>Add Note</span></a></li>
+                <li><a href="viewnotes.html"><i class="fa-solid fa-eye"></i><span>View Notes</span></a></li>
+                <li><a href="messages.html"><i class="fa-solid fa-envelope"></i><span>Inquiries</span></a></li>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i><span>Main Site</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <h1 class="sub-title">My Notes</h1>
+            
+            <div class="note-form-container mb-5">
+                <form id="note-form">
+                    <input type="text" name="Title" placeholder="Note Title (e.g., Recruitment Kochi)" required>
+                    <textarea name="Note" rows="4" placeholder="Write your note here..." required></textarea>
+                    <input type="hidden" name="sheet" value="Notes">
+                    <button type="submit" class="btn" id="save-note-btn">Save Note</button>
+                </form>
+            </div>
+
+            <hr style="border-color: #222;">
+
+            <div id="notes-list" class="row">
+                <p class="text-center w-100">Loading your notes...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzyhjunV__iItl3PyxdHVX9sNfPWZxsW6SuFKjHjkrBg0EnLMRqlSLbhA-tMplrl1Q-/exec'; // Replace with your deployment URL
+        const sidemenu = document.getElementById("sidemenu");
+
+        function openmenu() { sidemenu.style.right = "0"; }
+        function closemenu() { sidemenu.style.right = "-250px"; }
+
+        // Save Note Logic
+        const noteForm = document.getElementById('note-form');
+        noteForm.addEventListener('submit', e => {
+            e.preventDefault();
+            document.getElementById('save-note-btn').innerHTML = "Saving...";
+            
+            fetch(scriptURL, { method: 'POST', body: new FormData(noteForm)})
+            .then(response => {
+                alert("Note saved successfully!");
+                noteForm.reset();
+                document.getElementById('save-note-btn').innerHTML = "Save Note";
+                fetchNotes(); // Refresh the list
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert("Error saving note. Check console.");
+            });
+        });
+
+        // Fetch and Show Notes Logic
+        async function fetchNotes() {
+            const list = document.getElementById('notes-list');
+            try {
+                const response = await fetch(scriptURL + '?type=notes');
+                const data = await response.json();
+                
+                list.innerHTML = '';
+                if(data.length === 0) {
+                    list.innerHTML = '<p class="text-center w-100">No notes found.</p>';
+                }
+
+                data.reverse().forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'col-md-6 mb-4';
+                    card.innerHTML = `
+                        <div class="note-card">
+                            <small style="color: green;">${item.Date ? new Date(item.Date).toLocaleDateString() : 'No Date'}</small>
+                            <h3>${item.Title}</h3>
+                            <p>${item.Note}</p>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch (error) {
+                list.innerHTML = '<p class="text-danger text-center w-100">Error loading notes.</p>';
+            }
+        }
+
+        window.onload = fetchNotes;
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Edwin Thomas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="portfolio.css">
+    <script src="https://kit.fontawesome.com/c056c12f2e.js" crossorigin="anonymous"></script>
+</head>
+<body class="admin-body">
+
+    <div id="pin-overlay" class="pin-overlay">
+        <div class="pin-box">
+            <i class="fa-solid fa-shield-halved" style="font-size: 50px; color: green; margin-bottom: 20px;"></i>
+            <h3>Security Required</h3>
+            <p>Enter PIN to access dashboard</p>
+            <input type="password" id="admin-pin" placeholder="****" maxlength="4" autocomplete="off">
+            <button onclick="checkPin()" class="btn">Unlock Dashboard</button>
+            <p id="pin-error" style="color: #ff4d4d; margin-top: 15px; display: none;">Access Denied: Incorrect PIN</p>
+        </div>
+    </div>
+
+    <i class="fa-solid fa-bars open-icon" onclick="openmenu()"></i>
+
+    <nav class="sidebar-container" id="sidemenu">
+        <div class="sidebar-content">
+            <div class="logo"><h1>ADMIN<span>.</span></h1></div>
+            <i class="fa-solid fa-xmark close-icon" onclick="closemenu()"></i>
+            <ul class="nav-links">
+                <li><a href="admin.html" class="active-sidebar-link"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a></li>
+                <li><a href="note.html"><i class="fa-solid fa-pen-to-square"></i><span>Add Note</span></a></li>
+                <li><a href="viewnotes.html"><i class="fa-solid fa-eye"></i><span>View Notes</span></a></li>
+                <li><a href="messages.html"><i class="fa-solid fa-envelope"></i><span>Inquiries</span></a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-content" id="protected-content" style="display: none;">
+        <div class="container">
+            <h1 class="sub-title">Dashboard Overview</h1>
+            
+            <div class="row mb-5">
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <div class="stat-info"><h2 id="count-inquiries">0</h2><p>Total Inquiries</p></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(0, 128, 0, 0.1); color: green;"><i class="fa-solid fa-note-sticky"></i></div>
+                        <div class="stat-info"><h2 id="count-notes">0</h2><p>Total Notes</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="dashboard-box">
+                        <h3 class="box-title">Recent Activity</h3>
+                        <div class="table-responsive">
+                            <table class="table table-dark">
+                                <thead><tr><th>Name</th><th>Email</th><th>Date</th></tr></thead>
+                                <tbody id="recent-inquiries-list"></tbody>
+                            </table>
+                        </div>
+                        <a href="messages.html" class="view-all">View Full Logs →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CORRECT_PIN = "1234"; // Set your 4-digit PIN here
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbw71aHnGPlVKIDQRpmmM0CD1CTad25iZFY9up6zn5fZdULORaJUeji5LKHuIsdIcmXH/exec';
+
+        // --- SECURITY LOGIC ---
+        function checkPin() {
+            const enteredPin = document.getElementById('admin-pin').value;
+            const errorMsg = document.getElementById('pin-error');
+
+            if (enteredPin === CORRECT_PIN) {
+                // Save session so user doesn't have to re-enter PIN while tab is open
+                sessionStorage.setItem('admin_auth', 'true');
+                showDashboard();
+            } else {
+                errorMsg.style.display = "block";
+                document.getElementById('admin-pin').value = "";
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('pin-overlay').style.display = "none";
+            document.getElementById('protected-content').style.display = "block";
+            loadDashboardData();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_auth');
+            location.reload();
+        }
+
+        // --- DATA FETCHING ---
+        async function loadDashboardData() {
+            try {
+                const resInq = await fetch(scriptURL);
+                const dataInq = await resInq.json();
+                document.getElementById('count-inquiries').innerText = dataInq.length;
+
+                const inqList = document.getElementById('recent-inquiries-list');
+                inqList.innerHTML = '';
+                dataInq.reverse().slice(0, 3).forEach(item => {
+                    inqList.innerHTML += `<tr><td>${item.Name}</td><td>${item.Email}</td><td>${item.Date ? new Date(item.Date).toLocaleDateString() : 'N/A'}</td></tr>`;
+                });
+
+                const resNotes = await fetch(scriptURL + '?type=notes');
+                const dataNotes = await resNotes.json();
+                document.getElementById('count-notes').innerText = dataNotes.length;
+            } catch (err) { console.error(err); }
+        }
+
+        // Sidebar Logic
+        var sidemenu = document.getElementById("sidemenu");
+        function openmenu() { sidemenu.style.right = "0"; }
+        function closemenu() { sidemenu.style.right = "-250px"; }
+
+        // Check auth on load
+        window.onload = () => {
+            if (sessionStorage.getItem('admin_auth') === 'true') {
+                showDashboard();
+            }
+        };
+    </script>
+</body>
+</html>
